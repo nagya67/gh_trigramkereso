@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>text-test 2.0</title>
+    <link rel="stylesheet" href="./styles.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
+</head>
+
+<body>
+    <div class="container container-fluid">
+        <div class="row">
+            <div class="col-0 col-sm-1 col-md-1 col-lg-2 mybackground">
+            </div>
+            <div class="col-0 col-sm-10 col-md-10 col-lg-8">
+                <h1 class="middle">Trigramkereső</h1>
+                <div class="border">
+                    <p>
+                        A program jelenleg csak <b>Móricz Zsigmond Rokonok</b> c. regényét tudja megvizsgálni.
+                        A programot folyamatosan fejlesztjük.<br><br>
+                        A program kér egy kulcsszót, annak megkeresi a szövegben az összes előfordulását, majd veszi
+                        azok
+                        'r' karakter sugarú környezeteit, s azokat úgy rendezi össze, hogy ne legyen átfedés. Ezt
+                        követően
+                        ezekben a szemelvényekben egyenként megnézi minden egyes betűhármas előfordulási gyakoriságát, s
+                        kiválogatja azokat, amelyek ezen részletben szignifikánsan magasabb gyakorisággal fordulnak elő,
+                        mint magában a teljes szövegben.
+
+                        Program indítása a 'start' gombbal. <span class="red">Futásidő 1-2 perc!</span>
+                    </p>
+                </div>
+                <div>
+                    <p>
+                        Kulcsszó: <input type="text" id="keywordInput" value="tart"><br>
+                        Ennyi karakter legyen a kulcsszó környezetének a sugara:
+                        <input type="number" id="keyword-radius-input" value="200" style="width:120px">
+                        <button id="button4keyword" class="green" onclick="startProgramButtonFunction()">start</button>
+                        <br>A kulcszó ennyiszer fordul elő: <span class="aquamarine" id="keywordLocationNumber"> -
+                        </span>
+                        <br>A szöveg ennyi részletre lett bontva: <span class="aquamarine" id="ennyireszlet"> - </span>
+                        <small>(Ha csökkenti a kulcszó környezetének a sugarát, akkor több részletre különül el a
+                            szöveg.)</small>
+                    <ul>
+                        <li>
+                            Ha a táblázatban szereplő trigram bármelyikére kattint, akkor az a lenti
+                            szövegrészletekben színes háttérrel kiemelve jelenik meg.
+                        </li>
+                        <li>
+                            De rákereshet itt is a trigramra: <input type="text" style="width:80px" id="trigram-input">
+                            <button id="trigram-input-button" onclick="trigramInputFunction()">keres</button>
+                            <span id="nincs-trigram" style="color:red"></span>
+                        </li>
+                        <li>
+                            Ha a lenti trigramm-előfordulások alapján 3-nál több betűből álló betűsorra keresne rá, írja
+                            ide:<input type="text" style="width:200px" id="ngram-input">
+                            <button id="ngram-input-button" onclick="ngramInputFunction()">keres</button>
+                            <span>Ebben az esetben hosszabb futásidő előzheti meg az eredményt.</span>
+                            <span id="nincs-trigram" style="color:red"></span>
+                        </li>
+                    </ul>
+                    </p>
+                </div>
+                <div id="div4trigrams" class="myList inlineDisplay"></div>
+                <input type="radio" name="TRradio" id="TRabc" oninput="TRradioOninput()">
+                <label for="TRabc">abc sorrendben</label>
+                <input type="radio" name="TRradio" id="TRnagysag" oninput="TRradioOninput()" checked>
+                <label for="TRnagysag">nagyság szerint</label>
+                <span style="padding-left:100px"> A trigram/n-gram:
+                    <span style="color:red" id="trgrm"></span>
+                </span>
+                <div>
+                    <div style="display:inline-block;width:60%;min-height:280px;padding:5px">
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <td>A kulcsszó (<span id="kulcsszo"> - </span>) ennyi szövegrészben fordul elő:</td>
+                                    <td><span id="ennyiszov"> - </span></td>
+                                </tr>
+                                <tr>
+                                    <td>Ezek közül a trigram/n-gram (<span id="trigram"> - </span>) ennyi szövegrészben
+                                        fordul
+                                        elő:
+                                    </td>
+                                    <td>
+                                        <spam id="trigramennyi"></spam>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>ezekben:</td>
+                                    <td>
+                                        <spam id="ezekben"> - </spam>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>A trigram/n-gram a teljes szövegben ennyiszer fordul elő:</td>
+                                    <td>
+                                        <spam id="trigram-Full-Text-Occurrance" class="red"></spam>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>A trigram/n-gram az alábbi szövegrészekben ennyiszer fordul elő:</td>
+                                    <td>
+                                        <spam id="trigram-Occurrance-In-Short-Text" class="red"> - </spam>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Ez a teljes szövegben való előfordulás ennyi százaléka:</td>
+                                    <td>
+                                        <spam id="szorzo1" class="red"> - </spam>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+
+                    <div id="div4TrigramOccurrance" class="myListShort"
+                        style="display:inline-block;height:160px;width:38%;min-height:280px;padding:5px"></div>
+                </div>
+                <div>
+                    <p>A fenti keresés csak azt mutatja meg, hogy a szemelvényekben milyen sűrűséggel fordulnak elő
+                        a trigramok. Itt le tud futtatni egy olyan keresést, amely a trigram relatív sűrűségét
+                        mutatja meg, azaz kiválogatja azokat a trigrammokat, amelyek a teljes szöveghez képest
+                        kiemelkedő gyakorisággal fordulnak elő a kulcsszó sugara által definiált környezetekben.
+                        Minden ilyen előforduláshoz hozzá rendel egy <i>előfordulási index</i>et, s minél nagyobb
+                        ennek az indexnek az értéke, annál gyanúsabb, hogy a trigram 'hozzá kapcsolódó jelentést'
+                        hordoz. A fenti kulcsszóra<span class="red"> az előfordulási index középértéke közelítőleg
+                            <b><span id="ei-max"> - </span></b></span>. További kereséshez beállíthatja előfordulási
+                        indexet
+                        más értékre, s azt is, hogy legalább hányszor forduljon elő a szemelvényekben, hogy így
+                        áttekinthető mennyiségű trigramot kapjunk a 'kézi' vizsgálathoz.
+                        <label for="index-min">Ennyi legyen az előfordulási index min. értéke: </label>
+                        <input type="number" id="index-min" style="width:80px;margin:2px">
+                        <label for="occurrence-min">Min. ennyiszer szerepeljen a szövegben: </label>
+                        <input type="number" id="occurrence-min" style="width:80px;margin:2px;">
+                        <button onclick="checkAnomalies()">start</button>
+                        <br> Kattintson a kiválasztott trigramra! (A fenti táblázat ekkor ennek a trigramnak
+                        az adatait mutatja.)
+                    </p>
+                    <div id="tr-anomalies" class="myList"></div>
+                    A kiválasztott trigram: <span id="trgrm2"> - </span>
+                </div>
+                <div>
+                    <button onclick="tartalmazasFunction()">start</button>
+                </div>
+
+                <div id="div4results"></div>
+                <hr>
+                <p>Kiválaszthat konkrét szemelvényeket, hogy azokban keressen ngram ismétlődést.</p>
+                <div>
+                    <span id="checkbox-buttons4search"></span>
+                    <button id="cb-button" onclick="cbFunction()">keres</button>
+                </div>
+                <div id="div4CBresults"></div>
+                <hr>
+            </div>
+            <div class="col-0 col-sm-1 col-md-1 col-lg-2 mybackground">
+            </div>
+            <div class="row">
+                <div class="col-0 col-sm-1 col-md-1 col-lg-2 mybackground">
+                </div>
+                <div class="col-12 col-sm-10 col-md-10 col-lg-8">
+                    <div>
+                        <p>Itt az ngramok eloszlását vizsgálhatja.<br>
+                            <input id="ngram-length" type="number" style="width:60px" value="4"> legyen az ngram
+                            hossza!
+                            <button class="green" onclick="ngramLengthSearchFunction()">mehet</button>
+                        </p>
+                        <p>Ebből ennyi van: <span id="ennyi-ngram"> - </span>,
+                            min.: <span id="ennyi-ngram-min"> - </span>
+                            max.: <span id="ennyi-ngram-max"> - </span></p>
+                    </div>
+                    <div id="div-canvas-number-of-all-trigrams">
+                        <canvas id="canvas-number-of-all-trigrams">
+                        </canvas>
+                    </div>
+                    <label for="CNOAB-small">kis méret áttekintéshez</label>
+                    <input type="radio" id="CNOAB-small" oninput="CNOABfunction()" name="CNOAB-size" checked>
+                    <label for="CNOAB-big">nagy méret adatok leolvasásához</label>
+                    <input type="radio" id="CNOAB-big" oninput="CNOABfunction()" name="CNOAB-size">
+                    <div id="all-n-gram" class="myList"></div>
+                    Ezek az ngramok vannak <i>ennyiszer</i> (írja be a <i>számot</i>):
+                    <input type="number" id="circleNumberInput" value="24" style="width:60px">
+                    <button onclick="circleNumberFunction()">keres</button>
+                    <div id="circle-div" class="myList"></div>
+                </div>
+                <div class="col-0 col-sm-1 col-md-1 col-lg-2">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-0 col-sm-1 col-md-1 col-lg-2 mybackground">
+                </div>
+                <div class="col-12 col-sm-10 col-md-10 col-lg-8">
+                    <div>
+                        <p>hangsorismétlések eloszlása a kulcsszavak mentén<br>
+                        </p>
+                    </div>
+                    <div id="div-canvas-distribution-of-keywords1">
+                        <canvas id="canvas-distribution-of-keywords1">
+                        </canvas>
+                    </div>
+                    <label for="CDOK-small">kis méret áttekintéshez</label>
+                    <input type="radio" id="CDOK-small" oninput="CDOKfunction()" name="CDOK-size" checked>
+                    <label for="CDOK-big">nagy méret adatok leolvasásához</label>
+                    <input type="radio" id="CDOK-big" oninput="CDOKfunction()" name="CDOK-size">
+                </div>
+                <div class="col-0 col-sm-1 col-md-1 col-lg-2">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-0 col-sm-1 col-md-1 col-lg-2 mybackground">
+                </div>
+                <div class="col-12 col-sm-10 col-md-10 col-lg-8">
+                    <div>
+                        <p>satöbbik eloszlása<br>
+                        </p>
+                    </div>
+                    <div id="div-canvas-distribution-of-keywords2">
+                        <canvas id="canvas-distribution-of-keywords2">
+                        </canvas>
+                    </div>
+                    <label for="CDOK2-small">kis méret áttekintéshez</label>
+                    <input type="radio" id="CDOK2-small" oninput="CDOK2function()" name="CDOK2-size" checked>
+                    <label for="CDOK2-big">nagy méret adatok leolvasásához</label>
+                    <input type="radio" id="CDOK2-big" oninput="CDOKfunction()" name="CDOK2-size">
+                </div>
+                <div class="col-0 col-sm-1 col-md-1 col-lg-2">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-0 col-sm-1 col-md-1 col-lg-2 mybackground">
+                </div>
+                <div class="col-12 col-sm-10 col-md-10 col-lg-8">
+                    <div>
+                        <p>kettős oszlopgrafikon<br>
+                        </p>
+                    </div>
+                    <div id="div-canvas">
+                        <canvas id="canvas">
+                        </canvas>
+                    </div>
+                    <label for="CDOK2-small">kis méret áttekintéshez</label>
+                    <input type="radio" id="CDOK2-small" oninput="CDOK2function()" name="CDOK2-size" checked>
+                    <label for="CDOK2-big">nagy méret adatok leolvasásához</label>
+                    <input type="radio" id="CDOK2-big" oninput="CDOKfunction()" name="CDOK2-size">
+                </div>
+                <div class="col-0 col-sm-1 col-md-1 col-lg-2 mybackground">
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-0 col-sm-1 col-md-1 col-lg-2 mybackground">
+                </div>
+                <div class="col-12 col-sm-10 col-md-10 col-lg-8">
+                    <h5>Egymást közvetlenül követő szavak elején legalább két hang ismétlését tartalmazó alliterációk
+                    </h5>
+                    <p><button class="green" id="alliterációk keresése" onclick="make_allit_2_2()">keresés</button> A
+                        gomb lenyomása
+                        után megjelenő táblázatból az idézetekre való kattintással tudja azokat eltávolítani a
+                        táblázatból, ill. visszahelyezni oda. Ezt követően a program grafikonon ábrázolja, hogy hogyan
+                        oszlanak el ezek az alliterációt tartalmazó helyek a szövegben.</p>
+                    <div id="allit_2_2_div"></div>
+                    <div>
+                        <p>kettős oszlopgrafikon<br>
+                        </p>
+                    </div>
+                    <div><button class="green" onclick="graphOfAllit22Function()">grafikon rajzolása</button></div>
+                    <div id="div-canvas-allit22">
+                        <canvas id="canvas-allit22">
+                        </canvas>
+                    </div>
+                    <label for="CDOK2-small">kis méret áttekintéshez</label>
+                    <input type="radio" id="allit22-small" oninput="ALLIT22function()" name="allit22-size" checked>
+                    <label for="allit22-big">nagy méret adatok leolvasásához</label>
+                    <input type="radio" id="allit22-big" oninput="ALLIT22function()" name="allit22-size">
+                </div>
+                <div class="col-0 col-sm-1 col-md-1 col-lg-2">
+                </div>
+            </div>
+
+        </div>
+    </div>
+    </div>
+    <script src="./OV21dec21.js"></script>
+    <script src="./OV21febr4.js"></script>
+    <script src="./OV21febr17.js"></script>
+    <script src="./OV21szept21.js"></script>
+    <script src="./OV20jun12.js"></script>
+    <script src="./OV20febr28.js"></script>
+    <script src="./OV19szept19.js"></script>
+    <script src="./OV18jan3.js"></script>
+    <script src="./OV16okt23.js"></script>
+    <script src="./OV17jan7.js"></script>
+    <script src="./OV17marc15.js"></script>
+    <script src="./OV17okt23.js"></script>
+    <script src="./OV18marc15.js"></script>
+    <script src="./OV15marc9.js"></script>
+    <script src="./OV15marc15.js"></script>
+    <script src="./OV10okt2.js"></script>
+    <script src="./MoriczRokonok.js"></script>
+    <script src="./JózsefAttilaVersek.js"></script>
+    <script src="./Tusvanyos22.js"></script>
+    <script src="./Kádár.js"></script>
+    <script src="./Kosztolányi_Édes_Anna.js"></script>
+    <script src="./Kosztolányi_Pacsirta.js"></script>
+    <script src="./Kosztolányi_Nero.js"></script>
+    <script src="./Kosztolányi_Esti_Kornél.js"></script>
+    <script src="./Kosztolányi_összes_versek.js"></script>
+    <script src="./Karinthy_Utazás.js"></script>
+    <script src="./Karinthy_Capillária.js"></script>
+    <script src="./aranysarkany.js"></script>
+    <script src="./Semjén.js"></script>
+    <script src="./babits_halálfiai.js"></script>
+    <script src="./rudas.js"></script>
+    <script src="./Kemény_Özvegy.js"></script>
+    <script src="./Kemény_A_rajongók.js"></script>
+    <script src="./Babits_Gólyakalifa.js"></script>
+    <script src="./Kemény_Zsigmond_Naplója.js"></script>
+    <script src="./Kemény_Zord_idő.js"></script>
+    <script src="./Kemény_Gyulai_Pál.js"></script>
+    <script src="./Dian_Surigao.js"></script>
+    <script src="./orban2016marc15.js"></script>
+    <script src="./pálfi_anya.js"></script>
+    <script src="./OV23febr18evertekelo.js"></script>
+    <script src="./Csontváry_Önéletrajz.js"></script>
+    <script src="./szallasi.js"></script>
+    <script src="./fejes_jo_estet.js"></script>
+    <script src="./fejes_rozsdatemeto.js"></script>
+    <script src="./fejes_szerelemről.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="./index.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,21 @@
+:root{
+    --light-grey:#dbdbdb;
+    --tree-green:#2a7e19;
+}
+canvas{overflow:auto;}
+body{color:black;}
+.mybackground{background-image:url(./img/alphabet.jpg);background-repeat:repeat}
+.myList{background-color:#DADADA;border:1px solid grey;overflow:auto;height:150px;}
+.myListShort{background-color:#DADADA;border:1px solid grey;overflow:auto;height:150px;}
+input[type='text']{border:1px solid grey}
+table{border:1px solid grey}
+.red{color:red}
+.border{padding:10px;border: 1px solid grey; background-color:#DADADA;}
+.middle{text-align: center;}
+.ohp{width:100%}
+h1{padding:20px}
+.aquamarine{background-color:aquamarine}
+.lightcolar{background-color:lightcoral}
+.dadada{background-color: #dadada;}
+.white{background-color: white;}
+.green{background-color:green}
