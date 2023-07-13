@@ -282,7 +282,76 @@
                     <input type="radio" id="allit22-small" oninput="ALLIT22function()" name="allit22-size" checked>
                     <label for="allit22-big">nagy méret adatok leolvasásához</label>
                     <input type="radio" id="allit22-big" oninput="ALLIT22function()" name="allit22-size">
+                    <p>Ennél magasabb oszlopokkörül lévő szöveget kérem:
+                        <input type="number" id="column-height-input" value="500" style="width:120px">
+                    </p>
+                    <p>Ennyi legyen a kezdő, ill. a követő alliteráció környezetének a sugara (szó):
+                        <input type="number" id="alliteratio-radius-input" value="50" style="width:120px">
+                        <button class="green" onclick="allitTextFunction()">start</button>
+                    </p>
+                    <br>
+                    <p>Az oszlopok elejénél és végénél lévő alliterációk szövegkörnyezete. (Minden oszlopot két
+                        alliteráció határoz meg,
+                        a köztük lévő szavak száma az oszlop magassága.) --- <b>A kiszűrt oszlopok száma: <span
+                                id="kosz"> - </span></b>
+                    </p>
+
+                    <div id="selected-alliterations-texts"></div>
+                    <div class="col-0 col-sm-1 col-md-1 col-lg-2">
+                    </div>
                 </div>
+
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-0 col-sm-1 col-md-1 col-lg-2 mybackground">
+            </div>
+            <div class="col-12 col-sm-10 col-md-10 col-lg-8 light-yellow">
+                <p>Az egymást követő szavakban lévő hangsorimétléseket keresi ki.<br>
+                    Ennyi legyen a hangsor hossza: <input id="hangsor_hossza_HI" type="number" value="3"
+                        style="width:30px">
+                    Ennyi egymás utáni szóban keressen: <input id="ennyi_szo_HI" type="number" value="2"
+                        style="width:30px">
+                    <button onclick="HI_function()" class="green">start</button>
+                </p><br>
+
+
+                <div id="hangsorismétlések-table"></div><br>
+                <div>
+                    <p>Lentebb az hangsorismétlések szövegkörnyezeteit sorolja fel a program. Ekkora legyen egy-egy
+                        szemelvény
+                        terjedelme: <input type="number" id="HI-hossz" value="500" style="width:120px" onclick="HI_radius_function()"> karakter (nem
+                        szó!). <button onclick="HI_short_texts_function()" class="green">start</button>
+                    </p><br>
+                    <p><span id="HI-info-1"> - </span> db találatból <span id="HI-info-2"> - </span> találat lett
+                        kiválasztva,
+                        ezek <span id="HI-info-3"> - </span> szemelvényben lettek felsorolva. (Átfedések esetén a
+                        szemelvényeket összevonja a program.)</p>
+                </div>
+                <div>
+                    <p>A hangsorismétlések ilyen távolságra követik egymást. Az oszlopok magassága jelzi, hogy az egyes
+                        hangsorismétlések között
+                        hány szó áll.
+                    </p>
+                </div>
+                <div id="div-canvas-HI">
+                    <canvas id="canvas-HI">
+                    </canvas>
+                </div>
+                <label for="HI-small">kis méret áttekintéshez</label>
+                <input type="radio" id="HI-small" oninput="HI_size_function()" name="HI-size" checked>
+                <label for="HI-big">nagy méret adatok leolvasásához</label>
+                <input type="radio" id="HI-big" oninput="HI_size_function()" name="HI-size">
+
+                <div id="hangsorismétlések-short-texts"></div><br>
+                <div>
+                    <p>Itt a teljes szöveg olvasható, <span style='background-color:#acab34'> zöldes háttér</span>
+                        jelöli a hangsorismétlések helyét, <span style='background-color:#ffc0cb'> halványlila
+                            háttér</span>
+                        pedig a fentebb kihúzott hangsorismétlések helyét. <button onclick="HI_short_texts_function()"
+                            class="green">Start</button> </p>
+                </div>
+                <div id="hangsorismétlések-texts"></div>
                 <div class="col-0 col-sm-1 col-md-1 col-lg-2">
                 </div>
             </div>
@@ -310,6 +379,7 @@
     <script src="./JózsefAttilaVersek.js"></script>
     <script src="./Tusvanyos22.js"></script>
     <script src="./Kádár.js"></script>
+    <script src="./marai_a_gyertyak.js"></script>
     <script src="./Kosztolányi_Édes_Anna.js"></script>
     <script src="./Kosztolányi_Pacsirta.js"></script>
     <script src="./Kosztolányi_Nero.js"></script>
@@ -327,15 +397,20 @@
     <script src="./Kemény_Zsigmond_Naplója.js"></script>
     <script src="./Kemény_Zord_idő.js"></script>
     <script src="./Kemény_Gyulai_Pál.js"></script>
+    <script src="./Ottlik_Iskola.js"></script>
+    <script src="./Ottlik_Buda.js"></script>
     <script src="./Dian_Surigao.js"></script>
     <script src="./orban2016marc15.js"></script>
     <script src="./pálfi_anya.js"></script>
     <script src="./OV23febr18evertekelo.js"></script>
     <script src="./Csontváry_Önéletrajz.js"></script>
     <script src="./szallasi.js"></script>
+    <script src="./gyurcsany_oszod.js"></script>
     <script src="./fejes_jo_estet.js"></script>
     <script src="./fejes_rozsdatemeto.js"></script>
     <script src="./fejes_szerelemről.js"></script>
+    <script src="./marquez_szaz.js"></script>
+    <script src="./Konrad_a_latogato.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="./index.js"></script>
 </body>

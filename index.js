@@ -1,12 +1,19 @@
 // Event.path[0] deprecated lett, helyette Event.target !!!!!
 
-let base = "A, Á, B, C, Cs, D, Dz, Dzs, E, É, F, G, Gy, H, I, Í, J, K, L, Ly, M, N, Ny, O, Ó, Ö, Ő, P, R, S, Sz, T, Ty, U, Ú, Ü, Ű, V, Z, Zs, X, Y";
+let base = "A, Á, B, C, Cs, D, Dz, Dzs, E, É, F, G, Gy, H, I, Í, J, K, L, Ly, M, N, Ny, O, Ó, Ö, Ő, P, R, S, Sz, T, Ty, U, Ú, Ü, Ű, V, W, Z, Zs, X, Y";
+let base2 = "A, Á, B, C, Cs, D, Dz, Dzs, E, É, F, G, Gy, H, I, Í, J, K, L, Ly, M, N, Ny, O, Ó, Ö, Ő, P, R, S, Sz, T, Ty, U, Ú, Ü, Ű, V, W, Z, Zs, X, Y";
 let capLetters = base.split(", ");
 base = base.toLowerCase();
-const hyphen="–"
+
 let forLetters = base.split(", ");
 let letters = Array();
 forLetters.forEach(value => { if (value.length == 1) { letters.push(value) } })
+
+let forLetters2 = base2.split(", ");
+let letters2 = Array();
+forLetters2.forEach(value => { if (value.length == 1) { letters2.push(value) } })
+
+let lettersUpperAndLower = letters.concat(letters2)
 
 let capBigrams = Array();
 bigrams = Array();
@@ -14,8 +21,10 @@ let radius = 0;
 
 const startProgramButtonFunction = function () {
     radius = parseInt(document.querySelector("#keyword-radius-input").value);
-    function4KeywordButton();
+    keyWord = document.querySelector("#keywordInput").value
     mainFunction();
+    document.querySelector("#keywordLocationNumber").innerHTML = keyWordNumber;
+    intervallumFunction()
     trigramFunction();
     prepareAnomalies();
     checkAnomalies();
@@ -66,11 +75,29 @@ const startProgramButtonFunction = function () {
 // let titleArray = ["Orbán 2017 okt. 23."]
 // let textArray = [OV17okt23]
 
-let titleArray = ["Orbán 2018 márc. 15."]
-let textArray = [OV18marc15]
+// let titleArray = ["Konrád György: A látogató"]
+// let textArray = [latogato]
 
-// let titleArray = ["Csontváry: Önéletrajz"]
-// let textArray =[csontvary]
+// let titleArray = ["Gyurcsány Ferenc: Öszödi beszéd"]
+// let textArray = [oszod]
+
+// let titleArray = ["Marquez: Száz év magány"]
+// let textArray = [szaz]
+
+// let titleArray = ["Ottlik Géza: Iskola a határon"]
+// let textArray = [iskola]
+
+// let titleArray = ["Ottlik Géza: Buda"]
+// let textArray = [buda]
+
+// let titleArray = ["Márai Sándor: A gyertyák csonkig égnek"]
+// let textArray = [gyertyak]
+
+// let titleArray = ["Orbán 2018 márc. 15."]
+// let textArray = [OV18marc15]
+
+let titleArray = ["Csontváry: Önéletrajz"]
+let textArray = [csontvary]
 
 // let titleArray = ["Semjén Zsolt:Megsejteni a sejthetetlent"]
 // let textArray = [semjen]
@@ -84,10 +111,10 @@ let textArray = [OV18marc15]
 // let titleArray = ["József Attila: Versek"]
 // let textArray = [ja]
 
-// let titleArray = ["Kosztolányi Dezső: Pacsirta"]
+// let titleArray = ["Kosztolányi Dezső: Édes Anna"]
 // let textArray = [anna]
 
-// let titleArray = ["Kosztolányi Dezső: Édes Anna"]
+// let titleArray = ["Kosztolányi Dezső: Pacsirta"]
 // let textArray = [pacsirta]
 
 // let titleArray = ["Kosztolányi Dezső: Összes versek"]
@@ -156,17 +183,7 @@ let textArray = [OV18marc15]
 // let titleArray = ["Dian: Surigao"]
 // let textArray = [surigao]
 
-const function4KeywordButton = function () {
-    keyWord = document.querySelector("#keywordInput").value
-    mainFunction();
-    let KWLnumber = 0;
-    for (let i = 0; i < keyWordLocation.length; i++) {
-        for (let j = 0; j < keyWordLocation[i].length; j++) {
-            KWLnumber += j;
-        }
-    }
-    document.querySelector("#keywordLocationNumber").innerHTML = keyWordNumber;
-}
+
 
 let myContent = ``;
 let keyWordLocation = Array();
@@ -194,6 +211,8 @@ let coloredTextArray4Analyse = Array();
 let coloredTextArray4AnalyseBottom = Array();
 let rangeArray = Array();
 
+let textORIGINAL = textArray[0].slice(0)
+let allWordsORIGINAL = textORIGINAL.split(" ");
 
 for (let i = 0; i < textArray.length; i++) {
     textArray[i] = textArray[i].toLowerCase();
@@ -500,17 +519,15 @@ const mainFunction = function () {
         }
         keyWordLocation.push(myArray);
     }
+}
 
+const intervallumFunction = function () {
     let content = ``;
     shortTextArray = Array();
-    // textArray.forEach(value => {
-    //     let myArray = Array();
-    //     shortTextArray.push(myArray);
-    // })
 
-    //a kulcsszavak túl közel vannak, akkor a sugárs szélességnyi környezetük átfedi egymást, így
+    //a kulcsszavak túl közel vannak, akkor a sugár szélességnyi környezetük átfedi egymást, így
     //ugyanazt többször is számolhatja a program: meg kell határozni a diszjunkt intervallumokat
-    //array [start,finish]
+    //keyWordLocation4Radius [start,finish]
     keyWordLocation4radius = Array();
     let i = 0;
     let h = 0;
@@ -518,7 +535,7 @@ const mainFunction = function () {
     let start = 0;
     let finish = 0;
     let myNewStart = 0;
-    let noResult = true
+    //let noResult = true
     for (let j = 0; j < keyWordLocation[i].length; j++) {
         if (j == myNewStart && j < keyWordLocation[i].length - 1) {
             if (keyWordLocation[i][j + 1] - keyWordLocation[i][j] >= 2 * radius) {
@@ -530,39 +547,39 @@ const mainFunction = function () {
                 myNewStart += 1;
             } else {
                 let myArray2 = Array();
-                noResult = true;
-                //start = keyWordLocation[i][j] - radius;
-                (keyWordLocation[i][j] - radius < 0) ? (start = 0) : (start = keyWordLocation[i][j] - radius)
+
+                (keyWordLocation[i][j] - radius < 0) ? (start = 0) : (start = keyWordLocation[i][j] - radius);
+                (keyWordLocation[i][keyWordLocation[i].length - 1] + radius > textArray[h].length - 1) ? (finish = textArray[h].length - 1)
+                    : (finish = keyWordLocation[i][keyWordLocation[i].length - 1] + radius);
                 for (let m = j; m < keyWordLocation[i].length - 1; m++) {
                     if (keyWordLocation[i][m + 1] - keyWordLocation[i][m] > 2 * radius) {
-                        noResult = false;
                         (keyWordLocation[i][m] + radius > textArray[h].length - 1) ? (finish = textArray[h].length - 1)
                             : (finish = keyWordLocation[i][m] + radius);
                         myNewStart = m + 1
                         break;
                     }
-                    if (noResult == true) {
-                        (keyWordLocation[i][keyWordLocation.length - 1] + radius > textArray[h].length - 1) ? (finish = textArray[h].length - 1)
-                            : (finish = keyWordLocation[i][keyWordLocation[i].length - 1] + radius);
-                    }
                 }
                 myArray1.push([start, finish]);
             }
         }
-        if (j == keyWordLocation[i].length - 1 && noResult == false) {
-            start = keyWordLocation[i][keyWordLocation[i].length - 1] - radius;
+        //utolsó előfordulás, ill. ha a kulcsszó csak egyszer forful elő
+        if (j == keyWordLocation[i].length - 1) {
+            (keyWordLocation[i][j] - radius < 0) ? (start = 0) : (start = keyWordLocation[i][j] - radius);
             (keyWordLocation[i][j] + radius >= textArray[h].length) ? (finish = textArray[h].length - 1)
                 : (finish = keyWordLocation[i][j] + radius);
             myArray1.push([start, finish]);
         }
-        keyWordLocation4radius.push(myArray1);
     }
+    keyWordLocation4radius.push(myArray1);
 
     reszletSzovegekHossza = 0;
     for (let i = 0; i < keyWordLocation4radius.length; i++) {
         for (let j = 0; j < keyWordLocation4radius[i].length; j++) {
             reszletSzovegekHossza += keyWordLocation4radius[i][j][1] - keyWordLocation4radius[i][j][0]
         }
+    }
+    if (keyWordLocation4radius.length == 1) {
+        reszletSzovegekHossza = keyWordLocation4radius[0][1] - keyWordLocation4radius[0]
     }
 
     multiplicator = reszletSzovegekHossza / teljesSzovegHossza * 10000 * 3 / 4
@@ -1484,20 +1501,22 @@ let testWord = ""
 let quotation = ""
 let myIndex = 0
 
-const findCharacterLineRepetition1 = function () {
-    repetitions = [];
-    for (let i = 0; i < modifiedTextString.length - length_of_the_alliteration; i++) {
-        testWord = modifiedTextString.substring(i, i + length_of_the_alliteration)
-        for (let j = i + 1; j < i + how_many_characters_in_the_line - length_of_the_alliteration; j++) {
-            if (testWord == modifiedTextString.substring(j, j + length_of_the_alliteration)) {
-                myIndex = indexes_for_modified_text[i];
-                quotation = textArray[0].substring(myIndex - 10, myIndex + 100);
-                repetitions.push(testWord, quotation, j - i - 1)
-            }
-        }
-    }
-}
+// const findCharacterLineRepetition1 = function () {
+//     repetitions = [];
+//     for (let i = 0; i < modifiedTextString.length - length_of_the_alliteration; i++) {
+//         testWord = modifiedTextString.substring(i, i + length_of_the_alliteration)
+//         for (let j = i + 1; j < i + how_many_characters_in_the_line - length_of_the_alliteration; j++) {
+//             if (testWord == modifiedTextString.substring(j, j + length_of_the_alliteration)) {
+//                 myIndex = indexes_for_modified_text[i];
+//                 quotation = textArray[0].substring(myIndex - 10, myIndex + 100);
+//                 repetitions.push(testWord, quotation, j - i - 1)
+//             }
+//         }
+//     }
+// }
 
+
+//kiszedi a szavak között lévő írásjeleket, csak szavak és szóközök vannak a szövegben => modifiedTextString2
 let lettersWithSpace = letters.slice(0);
 lettersWithSpace.push(" ");
 let modifiedTextString2 = ""
@@ -1514,6 +1533,7 @@ let indexes4AllWordsHasOnlyLetters = [];
 // a program ui. ezeket is szónak tekinti; az indexes4... mutatja az kigyűjtött valódi szavak indexét az allWords tömbben)
 //. ill. kiszedhetjük az 'a', 'az' névelőket is
 let word_ = ""
+const hyphen = "–"
 for (let i = 0; i < allWords.length; i++) {
     word_ = ""
     for (let j = 0; j < allWords[i].length; j++) {
@@ -1521,56 +1541,45 @@ for (let i = 0; i < allWords.length; i++) {
             word_ += allWords[i][j]
         }
     }
-    if (word_!=hyphen /*&& word_!="a" && word_!="az"*/ ) {
-        allWordsHasOnlyLetters.push(word_)
-        indexes4AllWordsHasOnlyLetters.push(i);
-    }
+    // if (word_ != hyphen && word_!="a" && word_!="az") {
+    allWordsHasOnlyLetters.push(word_)
+    indexes4AllWordsHasOnlyLetters.push(i);
+    // }
 }
 
 
 
 
 
-const findCharacterLineRepetition2 = function () {
-    repetitions = []
-    let length_of_the_alliteration = 4;
-    let how_many_words = 3;
-    let myTestLine1 = "";
-    let myTestLine2 = "";
-    let quotation = ""
-    let myWord2 = ""
+// const findCharacterLineRepetition2 = function () {
+//     repetitions = []
+//     let length_of_the_alliteration = 4;
+//     let how_many_words = 3;
+//     let myTestLine1 = "";
+//     let myTestLine2 = "";
+//     let quotation = ""
+//     let myWord2 = ""
 
-    for (let i = 0; i < allWordsHasOnlyLetters.length - how_many_words; i++) {
-        testWord = "";
-        if (allWordsHasOnlyLetters[i].length >= length_of_the_alliteration) {
-            for (let j = 0; j < allWordsHasOnlyLetters[i].length; j++) {
-                testWord = allWordsHasOnlyLetters[i].substring(j, j + length_of_the_alliteration)
-                for (let k = 1; k < how_many_words; k++) {
-                    if (allWordsHasOnlyLetters[i + k].length >= length_of_the_alliteration) {
-                        for (let m = 0; m < allWordsHasOnlyLetters[i + k].length - length_of_the_alliteration; m++) {
-                            myWord2 = allWordsHasOnlyLetters[i + k].substring(m, m + length_of_the_alliteration);
-                            if (testWord == myWord2 && allWords[i] != allWords[i + k]) {
-                                quotation = allWords[i] + " " + allWords[i + 1] + " " + allWords[i + 2] + " " + allWords[i + 3]
-                                repetitions.push(testWord, quotation, k)
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
-let final_repetitions = []
-
-const final_repetitions_function = function () {
-    final_repetitions = []
-    for (let i = 0; i < repetitions4Chart.length; i++) {
-        if (repetitions4Chart[i] != 0) {
-            final_repetitions.push(repetitions[i])
-        }
-    }
-}
+//     for (let i = 0; i < allWordsHasOnlyLetters.length - how_many_words; i++) {
+//         testWord = "";
+//         if (allWordsHasOnlyLetters[i].length >= length_of_the_alliteration) {
+//             for (let j = 0; j < allWordsHasOnlyLetters[i].length; j++) {
+//                 testWord = allWordsHasOnlyLetters[i].substring(j, j + length_of_the_alliteration)
+//                 for (let k = 1; k < how_many_words; k++) {
+//                     if (allWordsHasOnlyLetters[i + k].length >= length_of_the_alliteration) {
+//                         for (let m = 0; m < allWordsHasOnlyLetters[i + k].length - length_of_the_alliteration; m++) {
+//                             myWord2 = allWordsHasOnlyLetters[i + k].substring(m, m + length_of_the_alliteration);
+//                             if (testWord == myWord2 && allWords[i] != allWords[i + k]) {
+//                                 quotation = allWords[i] + " " + allWords[i + 1] + " " + allWords[i + 2] + " " + allWords[i + 3]
+//                                 repetitions.push(testWord, quotation, k)
+//                             }
+//                         }
+//                     }
+//                 }
+//             }
+//         }
+//     }
+// }
 
 const double = ['cs', 'sz', 'zs', 'gy', 'ty', 'ny', 'ly']
 const double_alter = ['#', '&', '@', '%', '{', '=', '+']
@@ -1598,8 +1607,6 @@ for (let i = 0; i < allWordsHasOnlyLetters.length; i++) {
 const findCharacterLineRepetition3 = function (length_of_the_alliteration, how_many_words) {
     //csak a szókezdő hangsorokat vizsgálja, a szavak belsejében lévő hangsorokat nem!
     repetitions = []
-    //let length_of_the_alliteration = 2;
-    //let how_many_words = 2;
     let myTestLine1 = "";
     let myTestLine2 = "";
     let quotation = ""
@@ -1612,15 +1619,15 @@ const findCharacterLineRepetition3 = function (length_of_the_alliteration, how_m
             for (let k = 1; k < how_many_words; k++) {
                 if (allWordsHasNoDoubleLetter[i + k].length >= length_of_the_alliteration) {
                     myWord2 = allWordsHasNoDoubleLetter[i + k].substring(0, length_of_the_alliteration)
-                    if (testWord == myWord2 
+                    if (testWord == myWord2
                         //ha az első öt hang azonos, azt szóismétlésnek tekinti és kiszűri
-                        && allWordsHasNoDoubleLetter[i].substring(0,6) != allWordsHasNoDoubleLetter[i + k].substring(0,6)) {
-                        quotation = allWords[indexes4AllWordsHasOnlyLetters[i]] + " " 
-                        + allWords[indexes4AllWordsHasOnlyLetters[i]+1] + " "
-                        + allWords[indexes4AllWordsHasOnlyLetters[i]+2] + " "
-                        + allWords[indexes4AllWordsHasOnlyLetters[i]+3] + " "
-                        + allWords[indexes4AllWordsHasOnlyLetters[i]+4] + " "
-                        + allWords[indexes4AllWordsHasOnlyLetters[i]+5]
+                        && allWordsHasNoDoubleLetter[i].substring(0, 6) != allWordsHasNoDoubleLetter[i + k].substring(0, 6)) {
+                        quotation = allWords[indexes4AllWordsHasOnlyLetters[i]] + " "
+                            + allWords[indexes4AllWordsHasOnlyLetters[i] + 1] + " "
+                            + allWords[indexes4AllWordsHasOnlyLetters[i] + 2] + " "
+                            + allWords[indexes4AllWordsHasOnlyLetters[i] + 3] + " "
+                            + allWords[indexes4AllWordsHasOnlyLetters[i] + 4] + " "
+                            + allWords[indexes4AllWordsHasOnlyLetters[i] + 5]
                         repetitions.push([testWord, quotation, i])
                         repetitions4Chart.push(1)
                     }
@@ -1628,10 +1635,12 @@ const findCharacterLineRepetition3 = function (length_of_the_alliteration, how_m
             }
         }
     }
+    repetition3DistancesFunction();
 }
 
 repetitions4Chart = []
 
+//A listán ki lehet húzni alliterációkat
 const modify_allit_2_2 = function (myNumber) {
     if (repetitions4Chart[myNumber] == 0) {
         repetitions4Chart[myNumber] = 1
@@ -1671,19 +1680,56 @@ const make_allit_2_2 = function () {
     }
     content += `</table>`
     document.querySelector('#allit_2_2_div').innerHTML = content
+
+
+    // intervallumFunction()
+    // trigramFunction();
+    // prepareAnomalies();
+    // checkAnomalies();
+    // fillAnomaliesDiv();
+
+    // analyseShortTexts(rangeArray);
+    // analyseShortTexts2(rangeArray);
+    // div4AnalysedShortText();
+    // coloringContent(rangeArray);
+    // displayFinalColoredResult();
+
+    // makeCheckboxFunction();
 }
 
-allit22Distances = []
-allit22Sentences = []
-const allit22DistancesFunction = function () {
-    allit22Distances = []
-    allit22Sentences = []
-    for (let i = 0; i < final_repetitions.length - 1; i++) {
-        allit22Distances.push(final_repetitions[i + 1][2] - final_repetitions[i][2])
-        allit22Sentences.push(final_repetitions[i + 1][1])
+const repetition3DistancesFunction = function () {
+    for (let i = 1; i < repetitions.length; i++) {
+        repetitions[i].push(repetitions[i][2] - repetitions[i - 1][2])
     }
 }
 
+//kiszedi a repetitions közül azokat, amiket kihúztunk =>
+let final_repetitions = []
+const final_repetitions_function = function () {
+    final_repetitions = []
+    for (let i = 0; i < repetitions4Chart.length; i++) {
+        if (repetitions4Chart[i] != 0) {
+            final_repetitions.push(repetitions[i])
+        }
+    }
+}
+
+let allit22Distances = []
+let allit22Sentences = []
+let allit22Colors = []
+const allit22DistancesFunction = function () {
+    allit22Distances = []
+    allit22Sentences = [];
+    allit22Colors = [];
+    for (let i = 1; i < final_repetitions.length; i++) {
+        allit22Distances.push(final_repetitions[i][3])
+        allit22Sentences.push(final_repetitions[i - 1][1])
+        allit22Colors.push('rgba(0,0,0,1)')
+
+    }
+}
+
+//a grafikon méretét beállító rádiógombok lelovasása
 function ALLIT22function() {
     let innerHeight = window.innerHeight;
     let innerWidth = window.innerWidth;
@@ -1707,14 +1753,23 @@ function ALLIT22function() {
     if (notNowAllit22 == false) { graphOfAllit22Function() };
     notNowAllit22 = false;
 }
+
 let notNowAllit22 = true;
 ALLIT22function();
 let myChartAllit22 = "";
 let myDataAllit22 = Array();
 let myLabelsAllit22 = Array();
+
+
+let withRedColumns = false
 function graphOfAllit22Function() {
-    final_repetitions_function()
-    allit22DistancesFunction()
+    let colors = []
+    if (redColumns == false) {
+        final_repetitions_function();
+        allit22DistancesFunction();
+        colors = allit22Colors.slice(0)
+    } else { colors = selectedAllit22Colors.slice(0) }
+
 
     if (Boolean(myChartAllit22) == true) {
         myChartAllit22.destroy();
@@ -1727,14 +1782,16 @@ function graphOfAllit22Function() {
         data: {
             labels: allit22Sentences,
             datasets: [{
-                label: 'száma:',
+                label: 'magasság',
                 data: allit22Distances,
-                backgroundColor: [
-                    'rgba(0,0,0,0.2)'
-                ],
-                borderColor: [
-                    'rgba(0,0,0,0.2)'
-                ],
+                backgroundColor: colors,
+                borderColor: colors,
+                // backgroundColor: [
+                //     'rgba(0,0,0,0.2)'
+                // ],
+                // borderColor: [
+                //     'rgba(0,0,0,0.2)'
+                // ],
                 borderWidth: 1,
                 barThickness: 60,
                 barPercentage: 1,
@@ -1752,7 +1809,118 @@ function graphOfAllit22Function() {
             maintainAspectRatio: false,
         }
     });
+    redColumns = false;
 }
+
+//leolvassa a rádiógombokat
+let columnHeight = 0
+let allitRadius = 0
+let redColumns = false
+let redRepetitions = []
+let selectedAllit22Distances = []
+let selectedAllit22Colors = []
+
+//a kiválogatott oszlopokat színezi pirosra
+const allitTextFunction = function () {
+    columnHeight = parseInt(document.querySelector('#column-height-input').value)
+    allitRadius = parseInt(document.querySelector('#alliteratio-radius-input').value)
+    console.log(columnHeight, allitRadius);
+    redColumns = true
+    redRepetitions = [];
+    selectedAllit22Colors = allit22Colors.slice(0);
+    for (let i = 1; i < final_repetitions.length; i++) {
+        if (final_repetitions[i][3] >= columnHeight) {
+            //első helye, második helye, távolság köztük
+            redRepetitions.push([final_repetitions[i - 1][2], final_repetitions[i][2], final_repetitions[i][3],
+            final_repetitions[i - 1][0], final_repetitions[i][0]]);
+            selectedAllit22Distances.push(final_repetitions[i][3]);
+            selectedAllit22Colors[i - 1] = 'rgba(255,0,0,1)'
+        } else {
+            selectedAllit22Colors[i - 1] = 'rgba(0,0,0,0.5)'
+        }
+    }
+    graphOfAllit22Function()
+    allitTextFunction2()
+
+}
+
+const allitTextFunction2 = function () {
+    console.log(redRepetitions)
+    let content = ``;
+    let myString = ``
+    myArray = []
+    for (let i = 0; i < redRepetitions.length; i++) {
+        content += `<div><b>${i + 1}. --- oszlop magassága: ${redRepetitions[i][2]}</b>
+        <br>KEZDŐ alliteráció --- hangsor: ${redRepetitions[i][3]}
+        <br></div>`
+        myString = ``
+        myArray = allWordsORIGINAL.slice(redRepetitions[i][0] - allitRadius, redRepetitions[i][0])
+        myString = ``
+        myArray.forEach(value => { myString += value; myString += ' ' })
+        content += `<div style="padding-left:20px; background-color:#DCDCDC">${myString}`
+        myArray = allWordsORIGINAL.slice(redRepetitions[i][0], redRepetitions[i][0] + 2)
+        myString = ``
+        myArray.forEach(value => { myString += value; myString += ' ' })
+        content += `<b>${myString}</b > `
+        myArray = allWordsORIGINAL.slice(redRepetitions[i][0] + 2, redRepetitions[i][0] + allitRadius);
+        myString = ``
+        myArray.forEach(value => { myString += value; myString += ' ' })
+        content += `${myString} </div > `;
+
+        content += `<div>KÖVETŐ alliteráció --- hangsor: ${redRepetitions[i][4]}
+            </div>`
+        myString = ``
+        myArray = allWordsORIGINAL.slice(redRepetitions[i][1] - allitRadius, redRepetitions[i][1])
+        myArray.forEach(value => { myString += value; myString += ' ' })
+        content += `<div style = "padding-left:20px; background-color:#DCDCDC"> ${myString}`
+        myArray = allWordsORIGINAL.slice(redRepetitions[i][1], redRepetitions[i][1] + 2)
+        myString = ``
+        myArray.forEach(value => { myString += value; myString += ' ' })
+        content += `<b>${myString}</b > `
+        myArray = allWordsORIGINAL.slice(redRepetitions[i][1] + 2, redRepetitions[i][1] + allitRadius);
+        myString = ``
+        myArray.forEach(value => { myString += value; myString += ' ' })
+        content += `${myString} </div ><br> `;
+
+
+
+
+
+
+
+    }
+    document.querySelector('#selected-alliterations-texts').innerHTML = content;
+    document.querySelector('#kosz').innerHTML = redRepetitions.length;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 keyWordDistances = [];
 keyWordsPlaces = []
@@ -2089,13 +2257,13 @@ function CDOKfunction() {
     place2.style.overflow = "auto"
 
     if (document.querySelector("#CDOK-small").checked == true) {
-        place.style.width = `${innerWidth}px`;
+        place.style.width = `${innerWidth} px`;
         place.style.height = '300px';
         place.style.overflow = "auto"
     }
     if (document.querySelector("#CDOK-big").checked == true) {
         place.style.width = "30000px";
-        place.style.height = `${innerHeight / 2}px`;
+        place.style.height = `${innerHeight / 2} px`;
         place.style.overflow = "auto"
         //document.querySelector('#jumpToCanvas').scrollIntoView()
     }
@@ -2254,19 +2422,30 @@ function CDOK2function() {
     place2.style.overflow = "auto"
 
     if (document.querySelector("#CDOK2-small").checked == true) {
-        place.style.width = `${innerWidth}px`;
+        place.style.width = `${innerWidth} px`;
         place.style.height = '300px';
         place.style.overflow = "auto"
     }
     if (document.querySelector("#CDOK2-big").checked == true) {
         place.style.width = "30000px";
-        place.style.height = `${innerHeight / 2}px`;
+        place.style.height = `${innerHeight / 2} px`;
         place.style.overflow = "auto"
         //document.querySelector('#jumpToCanvas').scrollIntoView()
     }
     if (notNowCDOK == false) { graphOfDistributionOfKeywords2() };
     notNowCDOK = false;
 }
+
+let myLabel1 = []
+let myLabel2 = []
+let myLabel3 = []
+let myLabel4 = []
+let myLabel5 = []
+let myDatasArray1 = []
+let myDatasArray2 = []
+let myDatasArray3 = []
+let myDatasArray4 = []
+let myDatasArray5 = []
 let notNowCDOK2 = true;
 CDOK2function();
 function graphOfDistributionOfKeywords2() {
@@ -2439,4 +2618,489 @@ function makeMyGraph() {
     myLabels = [];
     for (let i = 0; i < 187; i++) { myLabels[i] = i }
     graphOfDistributionOfKeywords2()
+}
+
+
+let repetitionHI1 = ""
+let repetitionHI2 = ""
+
+// const change_back_double_letters = function (repetitionHI1) {
+//     for (let q = 0; q < repetitionHI1.length; q++) {
+//         if (['#', '&', '@', '%', '{', '=', '+'].includes(repetitionHI1[q])) {
+//             switch (repetitionHI1[q]) {
+//                 case '#':
+//                     letterHI = 'cs';
+//                     break;
+//                 case '&':
+//                     letterHI = 'sz';
+//                     break;
+//                 case '@':
+//                     letterHI = 'zs';
+//                     break;
+//                 case '%':
+//                     letterHI = 'gy';
+//                     break;
+//                 case '{':
+//                     letterHI = 'ty';
+//                     break;
+//                 case '=ny':
+//                     letterHI = 'cs';
+//                     break;
+//                 case '+':
+//                     letterHI = 'ly';
+//                     break;
+//             }
+//             repetitionHI2 += letterHI;
+//         } else {
+//             repetitionHI2 += repetitionHI1[q]
+//         }
+//     }
+//     return repetitionHI2
+//     console.log(repetitionHI1,repetitionHI2)
+// }
+
+const hangsorismetlesek_change_back_double_letters = function (array, index) {
+    //mi a tömb, a tömb adott elemének (szintén szömb) melyik indexű eleme tartalmazza a vizsgálandó 
+    array.forEach(item => {
+        for (let i = 0; i < item[index].length; i++) {
+            if (double_alter.includes(item[index][i])) {
+                item[index] = item[index].replace(item[index][i], double[double_alter.findIndex(element => element == item[index][i])])
+            }
+        }
+    })
+}
+
+
+
+// let hangsor_hossz = 3 //karakter
+// let ennyi_szo = 2 //szó
+let hangSorIsmetlodes_Results = []
+let hangSorIsmetlodes_Final_Results = ""
+let hangSorIsmetlodes_Indexes
+let myStart = 0
+function hangSorIsmetlodesFunction(hangsor_hossz, ennyi_szo) {
+    let testWord1 = ""
+    let testWord2 = ""
+    let result_text = ""
+    hangSorIsmetlodes_Results = []
+    hangSorIsmetlodes_Final_Results = ""
+    hangSorIsmetlodes_Indexes = []
+    for (let i = 0; i < allWordsHasNoDoubleLetter.length - ennyi_szo; i++) {
+        for (let j = 0; j < allWordsHasNoDoubleLetter[i].length - hangsor_hossz; j++) {
+            testWord1 = allWordsHasNoDoubleLetter[i].substring(j, j + hangsor_hossz)
+            if (testWord1.length == hangsor_hossz) {
+                for (let k = 1; k < ennyi_szo; k++) {
+                    if (k == 0) { myStart = 0 } else { myStart = 0 }
+                    for (let m = myStart; m < allWordsHasNoDoubleLetter[i + k].length; m++) {
+                        testWord2 = allWordsHasNoDoubleLetter[i + k].substring(m, m + hangsor_hossz);
+                        if (testWord2.length == hangsor_hossz && testWord1 == testWord2) {
+                            result_text = ""
+                            for (let g = 0; g < ennyi_szo; g++) {
+                                result_text += allWords[indexes4AllWordsHasOnlyLetters[i + g]]
+                                result_text += " "
+                            }
+                            hangSorIsmetlodes_Results.push([indexes4AllWordsHasOnlyLetters[i], testWord1, result_text, 1])
+                            hangSorIsmetlodes_Indexes.push(indexes4AllWordsHasOnlyLetters[i])
+                        }
+                    }
+                }
+
+            }
+        }
+    }
+    hangsorismetlesek_change_back_double_letters(hangSorIsmetlodes_Results, 1)
+
+
+    hangsorismetlesek_coloring_function()
+
+
+}
+
+let myIndexHI = -1
+let letterHI = ""
+
+const hangsorismetlesek_coloring_function = function (ennyi_szo) {
+    myIndexHI = -1
+    letterHI = ""
+    hangSorIsmetlodes_Final_Results = ''
+    for (let i = 0; i < allWords.length; i++) {
+        if (hangSorIsmetlodes_Indexes.includes(i)) {
+            myIndexHI = hangSorIsmetlodes_Indexes.findIndex(item => item == i)
+            hangSorIsmetlodes_Final_Results += allWordsORIGINAL[i - 1]
+            hangSorIsmetlodes_Final_Results += " "
+            hangSorIsmetlodes_Final_Results += `<span class=
+            ${hangSorIsmetlodes_Results[myIndexHI][3] == 1 ? '"dark-olive"' : '"light-pink"'}>`
+            for (let j = 0; j < ennyi_szo; j++) {
+
+                hangSorIsmetlodes_Final_Results += allWordsORIGINAL[i + j]
+                hangSorIsmetlodes_Final_Results += " "
+            }
+            i += ennyi_szo
+            hangSorIsmetlodes_Final_Results += `</span>`
+            hangSorIsmetlodes_Final_Results += " "
+            hangSorIsmetlodes_Final_Results += ` <span class='dark-pink'>`
+
+            hangSorIsmetlodes_Final_Results += `(${hangSorIsmetlodes_Results[myIndexHI][1]})</span> `
+        } else {
+            //i-1, különben kihagyná a következő rész első szavát
+            hangSorIsmetlodes_Final_Results += allWordsORIGINAL[i - 1]
+            hangSorIsmetlodes_Final_Results += " "
+        }
+
+    }
+    document.querySelector('#hangsorismétlések-texts').innerHTML = hangSorIsmetlodes_Final_Results
+
+
+}
+
+
+
+const strikeOutHI = function (myIndex) {
+
+    if (hangSorIsmetlodes_Results[myIndex][3] == 0) {
+        hangSorIsmetlodes_Results[myIndex][3] = 1
+    } else {
+        hangSorIsmetlodes_Results[myIndex][3] = 0
+    }
+    make_hangsorismetlesek_table()
+}
+
+let hangsorismetlesek_table = ""
+const make_hangsorismetlesek_table = function () {
+    hangsorismetlesek_table = "";
+    hangsorismetlesek_table += `<div>`
+    hangSorIsmetlodes_Results.forEach((item, index) => {
+        hangsorismetlesek_table += `<div id='${index}_hi' onclick='strikeOutHI(${index})'>
+        ${hangSorIsmetlodes_Results[index][3] == 0 ? '<s>' : '<b>'}
+        ${index + 1} --- ${hangSorIsmetlodes_Results[index][0]} --- 
+        ${hangSorIsmetlodes_Results[index][1]} --- ${hangSorIsmetlodes_Results[index][2]}
+        ${hangSorIsmetlodes_Results[index][3] == 0 ? '</s>' : '</b>'}
+        </div>`
+    })
+    hangsorismetlesek_table += `</div>`
+    document.querySelector("#hangsorismétlések-table").innerHTML = hangsorismetlesek_table
+}
+
+let my_characters = 0
+let my_words_number = 0
+
+const HI_data_function = function () {
+    my_characters = parseInt(document.querySelector("#hangsor_hossza_HI").value)
+    my_words_number = parseInt(document.querySelector("#ennyi_szo_HI").value)
+}
+
+const HI_function = function () {
+    HI_data_function()
+    hangSorIsmetlodesFunction(my_characters, my_words_number);
+    make_hangsorismetlesek_table();
+    HI_distributions_function();
+    graphOfDistributionOfHI()
+}
+
+let HI_radius = 0
+const HI_radius_function = function () {
+    HI_radius = Math.floor(parseInt(document.querySelector('#HI-hossz').value) / 2)
+}
+
+HI_radius_function()
+
+let HI_short_texts = []
+let HI_text1 = []
+let HI_text2 = []
+let HI_content = ""
+let HI_content_array = []
+let HI_sub_content = ""
+let HI_sub_content2 = ""
+let HI_sub_content_ORIGINAL_array = []
+let HI_sub_content_ORIGINAL = ''
+let HI_start = 0
+let HI_finish = 0
+let HI_stop = false
+let HI_counter = 0
+HI_parts_how_many = 0
+const HI_short_texts_function = function () {
+    //HI_function()
+    //hangSorIsmetlodesFunction(my_characters, my_words_number);
+    HI_parts_how_many = 0
+    HI_content = ""
+    HI_sub_content_ORIGINAL_array = []
+    HI_content_array = []
+    HI_data_function();
+    hangsorismetlesek_coloring_function(my_words_number);
+    HI_text1 = hangSorIsmetlodes_Final_Results.split('dark-olive')
+    //HI_radius = Math.floor(parseInt(document.querySelector('#HI-hossz').value) / 2)
+    HI_radius_function()
+    for (let i = 0; i < HI_text1.length; i++) {
+        HI_sub_content = ""
+        HI_sub_content_ORIGINAL = ""
+        HI_stop = false;
+        HI_start = i;
+        HI_finish = i;
+        HI_counter = 0
+        HI_sub_content2 = ""
+        while (HI_stop == false && i != HI_text1.length - 1) {
+            if (HI_counter == 0) {
+                HI_sub_content += HI_text1[i].substring(HI_text1[i].length - HI_radius, HI_text1[i].length)
+                HI_sub_content2 += HI_text1[i].substring(HI_text1[i].length - HI_radius, HI_text1[i].length)
+                if (i != HI_text1.length - 1) {
+                    HI_sub_content += 'dark-olive'
+                    HI_sub_content2 += 'dark-olive'
+                }
+                i += 1
+            } else {
+                if (HI_text1[i].length <= 2 * HI_radius) {
+                    HI_sub_content += HI_text1[i]
+                    HI_sub_content2 += HI_text1[i]
+                    if (i != HI_text1.length - 1) {
+                        HI_sub_content += 'dark-olive'
+                        HI_sub_content2 += 'dark-olive'
+                    }
+                    i += 1
+                } else {
+                    HI_sub_content += HI_text1[i].substring(0, HI_radius + 1)
+                    HI_sub_content2 += HI_text1[i].substring(0, HI_radius + 1)
+                    HI_sub_content = clearing_content_from_unclosed_tag(HI_sub_content)
+                    HI_parts_how_many += 1
+                    HI_content_array.push(HI_sub_content2)
+                    HI_sub_content += `<br>`
+                    HI_sub_content += `<p>-----------------------</p>`
+                    HI_content += HI_sub_content
+                    HI_stop = true;
+                    HI_finish = i;
+                    i -= 1
+                }
+            }
+
+            HI_counter += 1
+        }
+        if (i == HI_text1.length - 1) {
+            HI_sub_content += HI_text1[i - 1].substring(HI_text1[i - 1].length - HI_radius, HI_text1[i - 1].length)
+            HI_sub_content2 += HI_text1[i - 1].substring(HI_text1[i - 1].length - HI_radius, HI_text1[i - 1].length)
+            HI_sub_content += 'dark-olive'
+            HI_sub_content2 += 'dark-olive'
+            HI_sub_content += HI_text1[i].substring(0, HI_radius)
+            HI_sub_content2 += HI_text1[i].substring(0, HI_radius)
+            HI_sub_content = clearing_content_from_unclosed_tag(HI_sub_content)
+            HI_parts_how_many += 1
+            HI_content += HI_sub_content
+            HI_content_array.push(HI_sub_content2)
+        }
+    }
+
+    HI_sub_content_ORIGINAL = ""
+    let myContent = []
+    HI_content_array.forEach(item => {
+        HI_sub_content_ORIGINAL = ""
+        myContent = item.split('<span')
+
+        HI_sub_content_ORIGINAL += myContent[0] + " "
+        for (let i = 1; i < myContent.length; i++) {
+            if (i % 2 == 1) {
+                if (myContent[i].split(">").length > 1) {
+                    if (myContent[i].split(">")[1].split('</span').length > 1) {
+                        HI_sub_content_ORIGINAL += myContent[i].split(">")[1].split('</span')[0]
+                    }
+                }
+            }
+            if (i % 2 == 0 && myContent.length > 1) {
+                if (myContent[i].split('</span>').length > 1) {
+                    HI_sub_content_ORIGINAL += myContent[i].split('</span>')[1]
+                }
+            }
+        }
+        HI_sub_content_ORIGINAL_array.push(HI_sub_content_ORIGINAL)
+    })
+
+    document.querySelector('#hangsorismétlések-short-texts').innerHTML = HI_content
+    HI_info_function();
+    HI_distributions_function();
+    graphOfDistributionOfHI()
+    voice_lines_in_subcontents_function1()
+    console.log(voice_lines_in_subcontents)
+}
+
+let voice_lines_in_subcontents = []
+const voice_lines_in_subcontents_function1 = function () {
+    voice_lines_in_subcontents=[]
+    let myLength =6
+    let myResult = []
+    HI_sub_content_ORIGINAL_array.forEach(item => {
+        let myLine = ""
+        let item2 = ""
+        let myArray = item.split(" ")
+        myResult = []
+        myArray.forEach(item => {
+            if (item.length >= myLength) {
+                item2 = ""
+                for (let k = 0; k < item.length; k++) {
+                    if (lettersUpperAndLower.includes(item[k])) { item2 += item[k] }
+                }
+                if (item2.length >= myLength) {
+                    for (let i = 0; i < item2.length - myLength+1; i++) {
+                        myResult.push(item2.substring(i, i + myLength).toLowerCase())
+                    }
+                }
+            }
+        })
+        voice_lines_in_subcontents.push(myResult)
+    })
+    voice_lines_in_subcontents_function2()
+}
+
+const voice_lines_in_subcontents_function2 = function () {
+    for (let q = 0; q < voice_lines_in_subcontents.length; q++) {
+        let myArray = []
+        for (let i = 0; i < voice_lines_in_subcontents[q].length - 1; i++) {
+            for (let j = i + 1; j < voice_lines_in_subcontents[q].length; j++) {
+                if (voice_lines_in_subcontents[q][i] != voice_lines_in_subcontents[q][j] &&
+                    !myArray.includes(voice_lines_in_subcontents[q][j])) {
+                    myArray.push(voice_lines_in_subcontents[q][j])
+                }
+            }
+        }
+        voice_lines_in_subcontents[q] = myArray.slice(0)
+    }
+    voice_lines_in_subcontents_function3()
+}
+
+//kiveszi belőle az összes <span>...</span> formázást
+let commonLinesArray = []
+const voice_lines_in_subcontents_function3 = function () {
+    //az első elem az 1. és 2. tömb közös hangsorai, a második elem a 2. és 3. tömb közös hangsorai ...
+    commonLinesArray = []
+    for (let i = 0; i < voice_lines_in_subcontents.length - 1; i++) {
+        commonLinesArray.push([])
+        for (let j = 0; j < voice_lines_in_subcontents[i].length; j++) {
+            for (let k = 0; k < voice_lines_in_subcontents[i+1].length; k++) {
+                if (voice_lines_in_subcontents[i][j] == voice_lines_in_subcontents[i+1][k]) {
+                    commonLinesArray[i].push(voice_lines_in_subcontents[i][j])
+                }
+            }
+        }
+    }
+}
+
+const HI_sub_content_clearing_function = function (content) {
+    let newContent = ""
+    let myArray = content.split('<span');
+    for (let i = 0; i < myArray.length; i++) {
+        if (i % 2 == 0) {
+            newContent += myArray[i]
+        } else {
+            newContent += myArray[i].split('</span>')[1]
+        }
+    }
+    return newContent
+
+}
+
+//kiveszi a végéről a lezáratlan background='ffc0cb' tageket, hogy ne legyen utánna minden világoslila
+let subContentArray = []
+let subContent_text = ""
+const clearing_content_from_unclosed_tag = function (content) {
+    subContentArray = content.split('light-pink')
+    if (!subContentArray[subContentArray.length - 1].includes('</span>')) {
+        subContentArray[subContentArray.length - 1] += '</span>'
+        subContent_text = ""
+        for (let i = 0; i < subContentArray.length - 1; i++) {
+            subContent_text += subContentArray[i] + 'light-pink'
+        }
+        subContent_text += subContentArray[subContentArray.length - 1]
+    } else { subContent_text = content }
+    return subContent_text
+}
+
+let HI_data1 = 0
+let HI_data2 = 0
+let HI_data3 = 0
+const HI_info_function = function () {
+    HI_data1 = hangSorIsmetlodes_Results.length
+    HI_data2 = 0
+    hangSorIsmetlodes_Results.forEach(item => {
+        if (item[3] == 1) { HI_data2 += 1 }
+    })
+    //HI_data3 = HI_text1.length
+    HI_data3 = HI_parts_how_many
+    document.querySelector('#HI-info-1').innerHTML = `<b>${HI_data1}</b>`
+    document.querySelector('#HI-info-2').innerHTML = `<b>${HI_data2}</b>`
+    document.querySelector('#HI-info-3').innerHTML = `<b>${HI_data3}</b>`
+}
+
+const HI_distributions_function = function () {
+    myDatasHI = [];
+    myLabelsHI = [];
+    for (let i = 0; i < hangSorIsmetlodes_Results.length - 1; i++) {
+        if (hangSorIsmetlodes_Results[i][3] == 1) {
+            myDatasHI.push(hangSorIsmetlodes_Results[i + 1][0] - hangSorIsmetlodes_Results[i][0])
+            myLabelsHI.push(hangSorIsmetlodes_Results[i][2])
+        }
+    }
+}
+
+function HI_size_function() {
+    let innerHeight = window.innerHeight;
+    let innerWidth = window.innerWidth;
+    innerHeight = Math.floor(innerHeight * 0.9);
+    if (innerWidth >= 768) { innerWidth = Math.floor(innerWidth * 7 / 12) };
+    let place = document.querySelector("#div-canvas-HI")
+    let place2 = document.querySelector("#div-canvas-HI")
+    place2.style.overflow = "auto"
+
+    if (document.querySelector("#HI-small").checked == true) {
+        place.style.width = `${innerWidth} px`;
+        place.style.height = '300px';
+        place.style.overflow = "auto"
+    }
+    if (document.querySelector("#HI-big").checked == true) {
+        place.style.width = "30000px";
+        place.style.height = `${innerHeight / 2} px`;
+        place.style.overflow = "auto"
+        //document.querySelector('#jumpToCanvas').scrollIntoView()
+    }
+    if (notNowHI == false) { graphOfDistributionOfHI() };
+    notNowHI = false;
+}
+let notNowHI = true;
+HI_size_function();
+let myChartHI = "";
+let myDatasHI = Array();
+let myLabelsHI = Array();
+function graphOfDistributionOfHI() {
+
+    if (Boolean(myChartHI) == true) {
+        myChartHI.destroy();
+    }
+
+    document.getElementById('canvas-HI').innerHTML = "";
+    var ctx = document.getElementById('canvas-HI').getContext('2d');
+    myChartHI = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: myLabelsHI,
+            datasets: [{
+                label: 'száma:',
+                data: myDatasHI,
+                backgroundColor: [
+                    'rgba(0,0,0,0.2)'
+                ],
+                borderColor: [
+                    'rgba(0,0,0,0.2)'
+                ],
+                borderWidth: 1,
+                barThickness: 60,
+                barPercentage: 1,
+                barThickness: 'flex',
+                scaleSteps: 1,
+                scaleStepWidth: 100,
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            },
+            maintainAspectRatio: false,
+        }
+    });
 }
